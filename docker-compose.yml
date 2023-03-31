@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: myrootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - backend
+
+  jupyter:
+    image: jupyter/datascience-notebook:latest
+    restart: always
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - MYSQL_HOST=db
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=mypassword
+      - MYSQL_DATABASE=mydb
+      - ELASTICSEARCH_HOST=http://elasticsearch:9200
+      - KIBANA_HOST=http://kibana:5601
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    networks:
+      - backend
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.3
+    restart: always
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    networks:
+      - backend
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+    restart: always
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - backend
+
+volumes:
+  dbdata:
+  esdata:
+
+networks:
+  backend:
