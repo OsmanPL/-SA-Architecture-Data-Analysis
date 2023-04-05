@@ -1,2 +1,3 @@
-./data/mysql
-./notebooks
+data
+notebooks
+test_db

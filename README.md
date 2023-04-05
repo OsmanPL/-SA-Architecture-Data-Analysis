@@ -52,6 +52,7 @@ jupyter:
 
 ### Servicio db:
 Se utiliza la imagen latest de grafana/grafana, se coloca el puerto donde estara el contenedor que sera el 3000.
+Tambien estara un volumen para los notebooks el cual estara en el directorio de nuestra pc en "./data/grafana" y en el contenedor estara en el directorio "/var/lib/grafana".
 Y se unira a la red "my-network".
 
 ```yml
@@ -65,7 +66,7 @@ grafana:
 ```
 
 
-#### Creación de la red
+### Creación de la red
 
 Con el siguiente codigo se pueden crear las redes necesarias para el docker-compose.
 
@@ -73,3 +74,6 @@ Con el siguiente codigo se pueden crear las redes necesarias para el docker-comp
 networks:
   my-network:
 ```
+
+## Ejemplo
+
